@@ -1,0 +1,46 @@
+node {
+   def mvnHome
+   def file = "REPOS/${JOB_NAME}/${BUILD_ID}/${BUILD_NUMBER}"
+   echo "${file}"
+   stage('Preparation') { // for display purposes
+      // Get some code from a GitHub repository
+      //git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+      sh 'rm -rf /root/.jenkins/workspace/for/*'
+      git 'https://github.com/shiminde/maven.git'
+      // Get the Maven tool.
+      // ** NOTE: This 'M3' Maven tool must be configured
+      // **       in the global configuration.           
+      mvnHome = tool 'mvn'
+    }
+   stage('build') {
+      // Run the maven build
+      if (isUnix()) {
+         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      } else {
+         bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+      }
+   }
+   stage('guidang') {
+      //sh "echo start"
+      sh "mulu=`ls -d */`;for a in \$mulu;do echo \$a; cd \$a'target';package=`ls | grep -E 'jar|war'`;echo \$package;ssh 192.168.117.133 mkdir -p /${file}; scp \$package 192.168.117.133:/${file};cd ../..;done"
+   }
+ 
+   stage('Email') {
+     emailext body: '''(本邮件是程序自动下发的，请勿回复！)<br/><hr/>
+
+项目名称：$PROJECT_NAME<br/><hr/>
+
+构建编号：$BUILD_NUMBER<br/><hr/>
+
+构建状态：$BUILD_STATUS<br/><hr/>
+
+触发原因：${CAUSE}<br/><hr/>
+
+构建日志地址：<a href="${BUILD_URL}console">${BUILD_URL}console</a><br/><hr/>
+
+构建地址：<a href="$BUILD_URL">$BUILD_URL</a><br/><hr/>
+
+变更集:${JELLY_SCRIPT,template="html"}<br/><hr/>''', subject: '$PROJECT_NAME', to: 'smd984570656@126.com'
+
+   }
+}

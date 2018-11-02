@@ -27,5 +27,10 @@ cp */target/*.{war,jar} Package'''
         sh 'echo $file'
       }
     }
+    stage('zs') {
+      steps {
+        archiveArtifacts '*/target/*.jar'
+      }
+    }
   }
 }

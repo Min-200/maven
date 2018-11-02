@@ -13,5 +13,10 @@ pipeline {
         sh 'mvn clean package'
       }
     }
+    stage('') {
+      steps {
+        archiveArtifacts 'target/*.jar'
+      }
+    }
   }
 }

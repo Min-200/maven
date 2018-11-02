@@ -28,8 +28,17 @@ cp */target/*.{war,jar} Package'''
       }
     }
     stage('zs') {
-      steps {
-        archiveArtifacts '*/target/*.{war\\|jar}'
+      parallel {
+        stage('zs') {
+          steps {
+            archiveArtifacts '*/target/*.jar'
+          }
+        }
+        stage('war') {
+          steps {
+            archiveArtifacts '*/target/*.war'
+          }
+        }
       }
     }
   }

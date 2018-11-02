@@ -3,6 +3,9 @@ pipeline {
   stages {
     stage('start') {
       agent any
+      environment {
+        file = 'REPOS/${JOB_NAME}/${BUILD_ID}/${BUILD_NUMBER}'
+      }
       steps {
         echo 'Start'
       }
@@ -13,10 +16,15 @@ pipeline {
         sh 'mvn clean package'
       }
     }
-    stage('error') {
+    stage('Art') {
       steps {
         sh '''mkdir Package
 cp */target/*.{war,jar} Package'''
+      }
+    }
+    stage('Scp') {
+      steps {
+        sh 'echo $file'
       }
     }
   }

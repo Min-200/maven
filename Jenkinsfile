@@ -15,7 +15,7 @@ pipeline {
     }
     stage('error') {
       steps {
-        archiveArtifacts 'target/*.war'
+        archiveArtifacts '**/target/*.tar'
       }
     }
   }

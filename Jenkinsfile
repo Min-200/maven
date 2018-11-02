@@ -15,7 +15,8 @@ pipeline {
     }
     stage('error') {
       steps {
-        archiveArtifacts '**/target/*.tar'
+        sh '''mkdir Package
+cp */target/*.{war,jar} Package'''
       }
     }
   }

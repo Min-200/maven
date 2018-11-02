@@ -29,7 +29,7 @@ cp */target/*.{war,jar} Package'''
     }
     stage('zs') {
       steps {
-        archiveArtifacts '*/target/*.{war|jar}'
+        archiveArtifacts '*/target/*.{war\\|jar}'
       }
     }
   }

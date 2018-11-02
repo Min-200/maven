@@ -13,9 +13,9 @@ pipeline {
         sh 'mvn clean package'
       }
     }
-    stage('') {
+    stage('error') {
       steps {
-        archiveArtifacts 'target/*.jar'
+        archiveArtifacts 'target/*.war'
       }
     }
   }

@@ -8,25 +8,33 @@ pipeline {
       }
       steps {
         echo 'Start'
+        sh '''#!/bin/bash
+echo "hello first"
+ls 
+pwd'''
       }
     }
+
     stage('build') {
       agent any
       steps {
         sh 'mvn clean package'
       }
     }
+
     stage('Art') {
       steps {
         sh '''mkdir Package
 cp */target/*.{war,jar} Package'''
       }
     }
+
     stage('Scp') {
       steps {
         sh 'echo $file'
       }
     }
+
     stage('zs') {
       parallel {
         stage('zs') {
@@ -34,12 +42,15 @@ cp */target/*.{war,jar} Package'''
             archiveArtifacts '*/target/*.jar'
           }
         }
+
         stage('war') {
           steps {
             archiveArtifacts '*/target/*.war'
           }
         }
+
       }
     }
+
   }
 }
